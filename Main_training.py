@@ -8,15 +8,16 @@ import matplotlib.pyplot as plt
 from  tensorflow.keras.applications.vgg16 import VGG16
 
 
-train_df = pd.read_csv("D:\\Programovani\\Workspace 2.0\\birdclef-2022\\df2.csv")
-birds_id = pd.read_csv("D:\\Programovani\\Workspace 2.0\\birdclef-2022\\birds_id.csv")
+train_df = pd.read_csv() #Path to df2.csv
+birds_id = pd.read_csv() #Path to birds_id.csv
 train_df.sample(frac=1).reset_index(drop=True)
+"""Creating train and validation set"""
 valid_df = train_df[10000:].reset_index(drop=True)
 train_df = train_df[:10000]
 print(train_df.shape)
 print(valid_df.head())
 
-
+"""Generator loading spectrogram and id"""
 class VoiceGenerator(tf.keras.utils.Sequence):
     def __init__(self,df,id_list):
         self.df = df
@@ -42,6 +43,7 @@ class VoiceGenerator(tf.keras.utils.Sequence):
     
     
     
+"""Custom convolutional model"""
 def build_conv():
     conv_model = keras.Sequential()
     conv_model.add(Conv2D(64,1,1,activation='relu'))
@@ -62,7 +64,7 @@ def build_conv():
     return conv_model
 
 
-
+"""Fitting to VGG16 model"""
 
 model = VGG16(classes=21,weights=None, input_shape=(128,128,1))
 model.compile(optimizer = 'Adam',loss= 'categorical_crossentropy',metrics = ['accuracy'] )
